@@ -1,110 +1,119 @@
-# 6. Encapsulation, Abstraction, and Access Modifiers
+# 7. Abstract Classes and Interfaces
 
 ---
 
-## Encapsulation
+## Abstract Classes
 
-- **Definition:** Bundling data (fields) and methods that operate on that data into a single unit (class).
-- **Purpose:** Protects internal state by restricting direct access and allows controlled manipulation via methods (getters/setters).
+- **Definition:** A class that cannot be instantiated; it may have abstract (unimplemented) methods as well as concrete (implemented) methods.
+- **Purpose:** To provide a base for other classes to extend, enforcing a contract for subclasses.
 
-**Example:**
+**Syntax:**
 ```java
-public class Account {
-    private double balance; // private = encapsulated
+abstract class Animal {
+    abstract void makeSound(); // Abstract method
 
-    public double getBalance() {
-        return balance;
+    void breathe() {           // Concrete method
+        System.out.println("Breathing...");
     }
+}
+class Dog extends Animal {
+    void makeSound() { System.out.println("Woof"); }
+}
+```
 
-    public void deposit(double amount) {
-        if (amount > 0) balance += amount;
+- Subclasses **must** implement all abstract methods.
+- Can have constructors, fields, static methods.
+
+---
+
+## Interfaces
+
+- **Definition:** A contract specifying methods that must be implemented; only method signatures (until Java 8).
+- **Purpose:** Achieve abstraction and multiple inheritance (since classes can implement multiple interfaces).
+
+**Syntax:**
+```java
+interface Movable {
+    void move();
+}
+class Car implements Movable {
+    public void move() { System.out.println("Moving..."); }
+}
+```
+
+### Interface Features
+
+- All methods are **public** and **abstract** by default (until Java 8).
+- Fields are **public static final** (constants).
+- A class can implement multiple interfaces.
+- **Java 8+:** Static and default methods allowed in interfaces.
+- **Java 9+:** Private methods allowed.
+
+---
+
+## Abstract Class vs Interface
+
+| Feature         | Abstract Class           | Interface                   |
+|-----------------|-------------------------|-----------------------------|
+| Instantiation   | Cannot instantiate       | Cannot instantiate          |
+| Methods         | Abstract & concrete      | Only abstract (Java 7-)     |
+| Constructors    | Yes                     | No                          |
+| Fields          | Any type                 | `public static final` only  |
+| Multiple Inherit| Single inheritance       | Multiple inheritance        |
+| Access Modifier | Any                      | `public` only (methods)     |
+
+---
+
+## Default & Static Methods in Interfaces (Java 8+)
+
+```java
+interface Logger {
+    default void log(String msg) {
+        System.out.println("LOG: " + msg);
+    }
+    static void staticLog(String msg) {
+        System.out.println("STATIC LOG: " + msg);
     }
 }
 ```
 
 ---
 
-## Abstraction
+## Functional Interfaces & Lambda Expressions
 
-- **Definition:** Hiding complex implementation details and exposing only essential features via interfaces or abstract classes.
-- **Purpose:** Reduces complexity, increases reusability, and separates “what” from “how”.
-
-**Example (Interface):**
+- **Functional Interface:** Interface with a single abstract method. Used in lambda expressions.
 ```java
-interface Shape {
-    void draw(); // Abstract - no implementation here
+@FunctionalInterface
+interface Calculator {
+    int compute(int x, int y);
 }
-class Circle implements Shape {
-    public void draw() { System.out.println("Draw Circle"); }
-}
-```
-
-**Example (Abstract Class):**
-```java
-abstract class Vehicle {
-    abstract void move();
-}
-class Car extends Vehicle {
-    void move() { System.out.println("Car moves"); }
-}
-```
-
----
-
-## Access Modifiers
-
-| Modifier    | Class | Package | Subclass | World |
-|-------------|-------|---------|----------|-------|
-| `public`    |  ✔    |   ✔     |   ✔      |  ✔    |
-| `protected` |  ✔    |   ✔     |   ✔      |       |
-| (default)   |  ✔    |   ✔     |          |       |
-| `private`   |  ✔    |         |          |       |
-
-**Notes:**
-- Use `private` for fields to encapsulate data.
-- Use `public` for methods that provide controlled access.
-- `protected` is mainly used for inheritance.
-- (default, no keyword): visible only within the package.
-
----
-
-## Getters & Setters
-
-- Provide controlled access to private fields.
-- Can add validation or logic.
-
-```java
-public class Person {
-    private int age;
-
-    public int getAge() { return age; }
-    public void setAge(int a) {
-        if (a > 0) age = a;
-    }
-}
+Calculator add = (a, b) -> a + b;
 ```
 
 ---
 
 ## Common Pitfalls
 
-- Exposing fields as `public` breaks encapsulation.
-- Forgetting to use getters/setters for important validation.
-- Overusing accessors for trivial logic (sometimes direct access is fine for immutable fields).
+- Forgetting to implement all abstract/interface methods.
+- Multiple inheritance conflicts (must resolve default methods explicitly).
+- Not using `@Override` when implementing methods.
+- Cannot instantiate abstract classes or interfaces directly.
 
 ---
 
 ## Interview Tips
 
-- Explain why encapsulation improves security and maintainability.
-- Know how abstraction helps decouple interface from implementation.
-- Be able to implement and use access modifiers properly.
+- Explain when to use an abstract class vs an interface.
+- Know how to use default and static methods in interfaces.
+- Be able to write and implement interfaces and abstract classes.
+- Understand functional interfaces and where lambdas apply.
 
 ---
 
 ## Possible Follow-Up Questions
 
-- What is the difference between abstraction and encapsulation?
-- Can you access a `private` field from a subclass?
-- When would you use `protected` instead of `private`?
-- What is the default access modifier in Java?
+- Can an abstract class have no abstract methods?
+- Can an interface have constructors?
+- What happens if two interfaces have the same default method?
+- How does Java 8+ change what you can do with interfaces?
+
